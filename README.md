@@ -8,9 +8,9 @@
 
 - **Silnik:** Godot 4 (GDScript, projekt w `game/`)
 - **Typ gry:** 2.5D belt-scroller, przygodowa gra akcji z elementami RPG (tryb solo na start)
-- **Platforma docelowa:** PC (viewport bazowy `480×270`, okno `1280×720` / `1920×1080`, klawiatura + mysz / pad)
-- **Etap:** M1 — Grywalny prototyp (M0 ukończony)
-- **Najbliższy cel:** przygotować grywalny prototyp poruszania się i walki (M1)
+- **Platforma docelowa:** PC (viewport bazowy `480×270`, okno `1280×720` / `1920×1080`, klawiatura strzałki + `Z`/`X`/`C` + `Spacja` / pad)
+- **Etap:** M2 — Główna mechanika i pionowy wycinek (M1 ukończony)
+- **Najbliższy cel:** dopracować walkę, poprawić uwagi po testach M1 i przygotować pierwszą małą lokację (M2)
 
 ## Wizja gry
 
@@ -47,16 +47,21 @@ Gracz przemierza niebezpieczną krainę, rozwija bohatera i podejmuje decyzje wp
 
 ### M1 — Grywalny prototyp
 
-- [ ] Utworzyć projekt 2D w Godot 4 (GDScript) z ustawieniami renderowania pod pixel art (`Nearest`) i mapą wejść (klawiatura + mysz / pad).
-- [ ] Zbudować testową arenę 2.5D z granicami pasa terenu, kolizjami i sortowaniem głębi (`Y-Sort`).
-- [ ] Zaimplementować ruch bohatera w 2.5D (oś pozioma, głębia, skok z cieniem na ziemi) oraz kamerę (`Camera2D`).
-- [ ] Dodać podstawowe animacje placeholderowe bohatera (`idle`, `run`, `jump`, `dash`, `attack`, `hurt`, `dead`).
-- [ ] Dodać jednego przeciwnika testowego z prostym AI (wyrównywanie głębi, telegraf ataku, atak, otrzymywanie obrażeń).
-- [ ] Zaimplementować podstawowy atak wręcz (z kontrolą głębi trafienia), unik (`dash`/`roll`), odrzut i czytelny feedback trafień.
-- [ ] Dodać pasek zdrowia (HUD) oraz ekran porażki i zwycięstwa z możliwością szybkiego restartu.
-- [ ] Przetestować prototyp i spisać problemy do poprawy.
+- [x] Utworzyć projekt 2D w Godot 4 (GDScript) z ustawieniami renderowania pod pixel art (`Nearest`) i mapą wejść (klawiatura: strzałki + `Z`/`X`/`C` + `Spacja` oraz pad).
+- [x] Zbudować testową arenę 2.5D z granicami pasa terenu, kolizjami i sortowaniem głębi (`Y-Sort`).
+- [x] Zaimplementować ruch bohatera w 2.5D (oś pozioma, głębia, skok z cieniem na ziemi) oraz kamerę (`Camera2D`).
+- [x] Dodać podstawowe animacje placeholderowe bohatera (`idle`, `run`, `jump`, `dash`, `attack`, `hurt`, `dead`).
+- [x] Dodać jednego przeciwnika testowego z prostym AI (wyrównywanie głębi, telegraf ataku, atak, otrzymywanie obrażeń).
+- [x] Zaimplementować podstawowy atak wręcz (z kontrolą głębi trafienia), unik (`dash`/`roll`), odrzut i czytelny feedback trafień.
+- [x] Dodać pasek zdrowia (HUD) oraz ekran porażki z możliwością szybkiego restartu *(ekran zwycięstwa — do decyzji / na później)*.
+- [x] Przetestować prototyp i spisać problemy do poprawy.
 
-**Gotowe, gdy:** można uruchomić grę, poruszać się po lokacji, walczyć z przeciwnikiem i zakończyć próbę porażką lub zwycięstwem.
+**Gotowe, gdy:** można uruchomić grę, poruszać się po lokacji, walczyć z przeciwnikiem i zakończyć próbę porażką lub zwycięstwem *(na tym etapie zaimplementowano ekran porażki; ekran zwycięstwa odłożony na M2)*.
+
+#### Problemy i uwagi po testach M1
+
+- Przeciwnik potrafi blokować się na kamieniu/przeszkodach podczas pościgu (do poprawy: płynniejsze omijanie przeszkód w AI).
+- Dodać możliwość przeskakiwania nad niskimi przeszkodami (uwzględnienie wysokości `height_z` przy kolizji z niskimi obiektami).
 
 ### M2 — Główna mechanika i pionowy wycinek
 
@@ -132,3 +137,4 @@ Gracz przemierza niebezpieczną krainę, rozwija bohatera i podejmuje decyzje wp
 | 2026-11-25 | M0 — Plan i fundamenty | Utworzono wstępny plan projektu. |
 | 2026-11-25 | M0 — Plan i fundamenty | Ustalono belt-scroller 2.5D (solo), mroczny pixel art, walkę wręcz z unikiem, Godot 4 (GDScript), PC, placeholdery na M1 oraz bohatera i cel (Frodo / Pierścień / Góra Przeznaczenia); rozpisano plan M1. |
 | 2026-11-25 | M0 — Plan i fundamenty | Zakończono M0: dodano zarys fabuły (`docs/story.md`), dokument stylu (`docs/style-guide.md`) oraz bazowy projekt Godot 4 w `game/`. |
+| 2026-11-25 | M1 — Grywalny prototyp | Zakończono M1: zbudowano korytarz 2.5D z `Y-Sort`, ruch i skok Froda z cieniem, animacje placeholderowe, AI orka z telegrafem, walkę wręcz (`100 HP`, `20 DMG`), kierunkowy unik z i-frames, HUD oraz menu porażki z szybkim restartem; spisano 2 uwagi do poprawy. |
