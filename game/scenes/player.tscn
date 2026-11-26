@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 
@@ -9,7 +9,13 @@ size = Vector2(14, 7)
 size = Vector2(14, 24)
 
 [sub_resource type="RectangleShape2D" id="Rect_PlayerAttack"]
-size = Vector2(26, 22)
+size = Vector2(28, 22)
+
+[sub_resource type="RectangleShape2D" id="Rect_PlayerPogo"]
+size = Vector2(30, 22)
+
+[sub_resource type="RectangleShape2D" id="Rect_PlayerInteract"]
+size = Vector2(36, 26)
 
 [sub_resource type="Animation" id="Anim_RESET"]
 resource_name = "RESET"
@@ -623,7 +629,7 @@ _data = {
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 1
+collision_mask = 37
 script = ExtResource("1_player")
 
 [node name="Shadow" type="Polygon2D" parent="."]
@@ -680,7 +686,7 @@ color = Color(0.84, 0.94, 1, 0.72)
 polygon = PackedVector2Array(-3, -11, 12, -7, 17, 0, 12, 7, -2, 10, 6, 3, 7, -3)
 
 [node name="AttackHitbox" type="Area2D" parent="BodyPivot"]
-position = Vector2(17, -13)
+position = Vector2(18, -13)
 collision_layer = 8
 collision_mask = 16
 monitoring = false
@@ -689,8 +695,36 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BodyPivot/AttackHitbox"]
 shape = SubResource("Rect_PlayerAttack")
 
+[node name="PogoHitbox" type="Area2D" parent="BodyPivot"]
+position = Vector2(0, 2)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodyPivot/PogoHitbox"]
+shape = SubResource("Rect_PlayerPogo")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3.5)
+shape = SubResource("Rect_PlayerFoot")
+
+[node name="FootClearance" type="Area2D" parent="."]
+position = Vector2(0, -3.5)
+collision_layer = 0
+collision_mask = 32
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FootClearance"]
+shape = SubResource("Rect_PlayerFoot")
+
+[node name="EnemyClearance" type="Area2D" parent="."]
+position = Vector2(0, -3.5)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyClearance"]
 shape = SubResource("Rect_PlayerFoot")
 
 [node name="Hurtbox" type="Area2D" parent="."]
@@ -701,6 +735,15 @@ monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("Rect_PlayerHurtbox")
+
+[node name="InteractionSensor" type="Area2D" parent="."]
+position = Vector2(0, -10)
+collision_layer = 0
+collision_mask = 64
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionSensor"]
+shape = SubResource("Rect_PlayerInteract")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

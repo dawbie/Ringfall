@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/campfire.gd" id="1_campfire"]
+
+[sub_resource type="RectangleShape2D" id="Rect_CampfireInteract"]
+size = Vector2(38, 26)
+
+[node name="Campfire" type="Area2D"]
+collision_layer = 64
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_campfire")
+prompt_text = "[Shift] Odpocznij (ulecz HP)"
+
+[node name="Glow" type="Polygon2D" parent="."]
+color = Color(0.95, 0.52, 0.18, 0.18)
+polygon = PackedVector2Array(-20, -2, -12, -8, 12, -8, 20, -2, 20, 5, 12, 8, -12, 8, -20, 5)
+
+[node name="Logs" type="Polygon2D" parent="."]
+color = Color(0.32, 0.21, 0.14, 1)
+polygon = PackedVector2Array(-10, 1, 10, 1, 8, -4, -8, -4)
+
+[node name="Stones" type="Polygon2D" parent="."]
+color = Color(0.36, 0.34, 0.4, 1)
+polygon = PackedVector2Array(-12, 2, -8, 4, 8, 4, 12, 2, 10, -2, -10, -2)
+
+[node name="FlameOuter" type="Polygon2D" parent="."]
+position = Vector2(0, -3)
+color = Color(0.92, 0.42, 0.14, 0.95)
+polygon = PackedVector2Array(-5, 0, 5, 0, 3, -9, 0, -14, -3, -8)
+
+[node name="FlameInner" type="Polygon2D" parent="."]
+position = Vector2(0, -3)
+color = Color(1, 0.84, 0.38, 1)
+polygon = PackedVector2Array(-2, 0, 2, 0, 1, -6, 0, -9, -1, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6)
+shape = SubResource("Rect_CampfireInteract")

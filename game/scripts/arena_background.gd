@@ -14,13 +14,15 @@ func _draw() -> void:
 	draw_rect(Rect2(0, 0, ARENA_WIDTH, LANE_TOP), Color("#131018"))
 
 	# Distant ruined wall silhouettes along the horizon
+	var ruin_index := 0
 	for x in range(0, ARENA_WIDTH, 96):
 		draw_rect(Rect2(x, 42, 72, LANE_TOP - 42), Color("#1c1724"))
 		draw_rect(Rect2(x + 12, 26, 20, 16), Color("#1c1724"))
 		draw_rect(Rect2(x + 44, 34, 16, 8), Color("#1c1724"))
 		# Dim torch / ember accent on every second ruin
-		if (x / 96) % 2 == 0:
+		if ruin_index % 2 == 0:
 			draw_rect(Rect2(x + 34, 72, 4, 6), Color("#b85d28"))
+		ruin_index += 1
 
 	# Back wall rim separating horizon from walkable 2.5D lane
 	draw_rect(Rect2(0, LANE_TOP - 8, ARENA_WIDTH, 8), Color("#2c2536"))

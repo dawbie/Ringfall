@@ -65,10 +65,10 @@ Gracz przemierza niebezpieczną krainę, rozwija bohatera i podejmuje decyzje wp
 
 ### M2 — Główna mechanika i pionowy wycinek
 
-- [ ] Wybrać i dopracować podstawowy model walki.
-- [ ] Dodać uniki lub blokowanie (wybrać mechanikę pasującą do projektu).
-- [ ] Dodać interakcje z obiektami i postaciami niezależnymi.
-- [ ] Przygotować jedną małą, dopracowaną lokację z początkiem i końcem.
+- [x] Wybrać i dopracować podstawowy model walki — 3-uderzeniowe combo (`Z`) z buforowaniem wejścia, atak z uniku (`X` → `Z`) przebijający się za wroga z lekkim podbiciem, cięcie w powietrzu, odbicie w dół nad wrogiem (*pogo*, `Dół + Z`), kolizje z wrogami przy zwykłym chodzeniu (przenikanie przez `X`, `X` → `Z`, `C` i wysoki skok), system *poise/hyper-armor* zapobiegający blokowaniu AI spamem ataku oraz poprawki po testach M1 (omijanie przeszkód przez AI, przeskakiwanie nad niskimi obiektami).
+- [x] Dodać uniki lub blokowanie (wybrać mechanikę pasującą do projektu) — kierunkowy unik (`X`) z powidokami i bonusem za perfekcyjny unik oraz Moc Pierścienia (`C`: Świat Cieni jak w LotR — zwykli wrogowie tracą Froda z oczu i zmieniają się w obłoki dymu, ale spada **Wola / Zdrowie psychiczne** i po cichu rośnie ukryta korupcja; przy niskiej Woli jak w *Don't Starve* pojawiają się Cienie/Zjawy widzące Froda nawet w Świecie Cieni).
+- [x] Dodać interakcje z obiektami i postaciami niezależnymi — klawisz `Shift` (oraz `E` / `RB`), bazowa klasa `Interactable`, przyjazny NPC (Sam z oknem dialogowym), ognisko leczące HP oraz pradawna kapliczka z wyborem dla gracza.
+- [x] Przygotować jedną małą, dopracowaną lokację z początkiem i końcem — *Pogranicze: Zmierzchowe Ruiny* (`borderland_ruins.tscn`, 1800 px): obóz startowy (Sam + ognisko) → zwiadowca → dziedziniec z 2 orkami → kapliczka + elitarny Strażnik Bramy → zapieczętowana brama wyjściowa otwierana po pokonaniu wrogów.
 - [ ] Dodać cel zadania i prosty ekran jego ukończenia.
 - [ ] Przygotować tymczasowe efekty dźwiękowe i muzykę.
 - [ ] Przetestować wycinek z innymi osobami i zebrać uwagi.
@@ -138,3 +138,7 @@ Gracz przemierza niebezpieczną krainę, rozwija bohatera i podejmuje decyzje wp
 | 2026-11-25 | M0 — Plan i fundamenty | Ustalono belt-scroller 2.5D (solo), mroczny pixel art, walkę wręcz z unikiem, Godot 4 (GDScript), PC, placeholdery na M1 oraz bohatera i cel (Frodo / Pierścień / Góra Przeznaczenia); rozpisano plan M1. |
 | 2026-11-25 | M0 — Plan i fundamenty | Zakończono M0: dodano zarys fabuły (`docs/story.md`), dokument stylu (`docs/style-guide.md`) oraz bazowy projekt Godot 4 w `game/`. |
 | 2026-11-25 | M1 — Grywalny prototyp | Zakończono M1: zbudowano korytarz 2.5D z `Y-Sort`, ruch i skok Froda z cieniem, animacje placeholderowe, AI orka z telegrafem, walkę wręcz (`100 HP`, `20 DMG`), kierunkowy unik z i-frames, HUD oraz menu porażki z szybkim restartem; spisano 2 uwagi do poprawy. |
+| 2026-11-26 | M2 — Główna mechanika | Rozbudowano walkę Froda: 3-uderzeniowe combo z buforowaniem, cięcie w powietrzu, *pogo* (`Dół + Z`), atak z uniku (`X` → `Z`) z przebiciem za wroga i podbiciem, a także naprawiono uwagi z M1 (omijanie kamienia przez AI i przeskakiwanie niskich przeszkód). |
+| 2026-11-26 | M2 — Główna mechanika | Dodano perfekcyjny unik (`X`), Moc Pierścienia (`C` — filmowy Świat Cieni z ukryciem przed orkami i człekokształtnymi obłokami dymu), pasek **Woli** (zdrowie psychiczne jak w *Don't Starve* ze Zjawami przy niskiej Woli) oraz ukrytą korupcję w `GameState`. |
+| 2026-11-26 | M2 — Główna mechanika | Dodano system interakcji (`Shift` / `E`): NPC Sam z dialogami, leczące Ognisko oraz Kapliczkę z wyborem moralnym; usunięto też błędy/warningi GDScript. |
+| 2026-11-26 | M2 — Pionowy wycinek | Zbudowano lokację *Pogranicze: Zmierzchowe Ruiny* (`1800 px`) z kilkoma starciami, elitarnym Strażnikiem Bramy i zapieczętowaną bramą; dodano wrogom *poise* (brak nieskończonego stunlocka) oraz kolizje ciał przy zwykłym chodzeniu (przenikanie tylko unikiem/skokiem/Światem Cieni). |

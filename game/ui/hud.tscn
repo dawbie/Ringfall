@@ -5,13 +5,33 @@
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 
+[node name="SanityVignette" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.02, 0.1, 0.0)
+
+[node name="ShadowVignette" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.22, 0.28, 0.42, 0.34)
+
 [node name="TopLeftHUD" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 10.0
 offset_top = 8.0
-offset_right = 180.0
-offset_bottom = 38.0
+offset_right = 200.0
+offset_bottom = 68.0
 
 [node name="NameLabel" type="Label" parent="TopLeftHUD"]
 layout_mode = 0
@@ -58,14 +78,143 @@ offset_right = 96.0
 offset_bottom = 8.0
 color = Color(0.24, 0.78, 0.38, 1)
 
+[node name="SanityFrame" type="ColorRect" parent="TopLeftHUD"]
+layout_mode = 0
+offset_top = 26.0
+offset_right = 98.0
+offset_bottom = 34.0
+color = Color(0.05, 0.04, 0.07, 0.95)
+
+[node name="SanityBg" type="ColorRect" parent="TopLeftHUD/SanityFrame"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 97.0
+offset_bottom = 7.0
+color = Color(0.14, 0.12, 0.2, 1)
+
+[node name="SanityFill" type="ColorRect" parent="TopLeftHUD/SanityFrame/SanityBg"]
+layout_mode = 0
+offset_right = 96.0
+offset_bottom = 6.0
+color = Color(0.55, 0.42, 0.9, 1)
+
+[node name="SanityValue" type="Label" parent="TopLeftHUD"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 24.0
+offset_right = 175.0
+offset_bottom = 36.0
+theme_override_colors/font_color = Color(0.78, 0.72, 0.96, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.04, 0.06, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 8
+text = "Wola: 100"
+
+[node name="RingStatus" type="Label" parent="TopLeftHUD"]
+layout_mode = 0
+offset_top = 38.0
+offset_right = 160.0
+offset_bottom = 50.0
+theme_override_colors/font_color = Color(0.91, 0.75, 0.32, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.04, 0.06, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 8
+text = "Pierscien [C]: Gotowy"
+
+[node name="ToastLabel" type="Label" parent="."]
+visible = false
+offset_left = 110.0
+offset_top = 12.0
+offset_right = 370.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.98, 0.9, 0.56, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.03, 0.06, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 9
+text = ""
+horizontal_alignment = 1
+
 [node name="ControlsHint" type="Label" parent="."]
 offset_left = 10.0
 offset_top = 254.0
-offset_right = 310.0
+offset_right = 472.0
 offset_bottom = 266.0
 theme_override_colors/font_color = Color(0.75, 0.72, 0.78, 0.72)
 theme_override_font_sizes/font_size = 8
-text = "Strzalki: Ruch | Spacja: Skok | Z: Atak | X: Unik"
+text = "Strzalki: Ruch | Spacja: Skok | Z: Atak | X: Unik | C: Pierscien | Shift: Interakcja"
+
+[node name="DialoguePanel" type="ColorRect" parent="."]
+visible = false
+offset_left = 20.0
+offset_top = 186.0
+offset_right = 460.0
+offset_bottom = 250.0
+color = Color(0.06, 0.05, 0.09, 0.94)
+
+[node name="InnerBorder" type="ColorRect" parent="DialoguePanel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 438.0
+offset_bottom = 62.0
+color = Color(0.14, 0.12, 0.18, 1)
+
+[node name="SpeakerLabel" type="Label" parent="DialoguePanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 240.0
+offset_bottom = 17.0
+theme_override_colors/font_color = Color(0.95, 0.78, 0.36, 1)
+theme_override_font_sizes/font_size = 9
+text = "Sam"
+
+[node name="DialogueText" type="Label" parent="DialoguePanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 18.0
+offset_right = 430.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(0.93, 0.91, 0.88, 1)
+theme_override_font_sizes/font_size = 8
+text = "..."
+autowrap_mode = 2
+
+[node name="ContinueHint" type="Label" parent="DialoguePanel"]
+layout_mode = 0
+offset_left = 260.0
+offset_top = 48.0
+offset_right = 430.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(0.75, 0.72, 0.68, 1)
+theme_override_font_sizes/font_size = 7
+text = "[Shift / Spacja] Dalej"
+horizontal_alignment = 2
+
+[node name="ChoicesBox" type="HBoxContainer" parent="DialoguePanel"]
+visible = false
+layout_mode = 0
+offset_left = 10.0
+offset_top = 42.0
+offset_right = 430.0
+offset_bottom = 60.0
+theme_override_constants/separation = 8
+
+[node name="ChoiceBtn0" type="Button" parent="DialoguePanel/ChoicesBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 7
+text = "Opcja 1"
+
+[node name="ChoiceBtn1" type="Button" parent="DialoguePanel/ChoicesBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 7
+text = "Opcja 2"
 
 [node name="DeathOverlay" type="ColorRect" parent="."]
 visible = false

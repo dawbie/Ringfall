@@ -14,7 +14,7 @@ size = Vector2(26, 22)
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 1
+collision_mask = 35
 script = ExtResource("1_enemy")
 
 [node name="Shadow" type="Polygon2D" parent="."]
@@ -65,6 +65,37 @@ polygon = PackedVector2Array(-1, -2, 2, -2, 2, 2, -1, 2)
 [node name="Cleaver" type="Polygon2D" parent="BodyPivot/VisualRig/WeaponPivot"]
 color = Color(0.58, 0.6, 0.65, 1)
 polygon = PackedVector2Array(2, -1, 16, -6, 19, -2, 15, 2, 2, 1)
+
+[node name="ShadowSmokeForm" type="Node2D" parent="BodyPivot"]
+visible = false
+
+[node name="SmokeLegsLeft" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.08, 0.07, 0.13, 0.66)
+polygon = PackedVector2Array(-6, 0, -2, 0, -1, -9, -6, -9)
+
+[node name="SmokeLegsRight" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.08, 0.07, 0.13, 0.66)
+polygon = PackedVector2Array(1, 0, 6, 0, 6, -9, 1, -9)
+
+[node name="SmokeTorso" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.09, 0.08, 0.15, 0.74)
+polygon = PackedVector2Array(-7, -8, 7, -8, 9, -15, 17, -14, 15, -18, 9, -20, 10, -24, -10, -24, -11, -18, -7, -14)
+
+[node name="SmokeHead" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.11, 0.1, 0.18, 0.76)
+polygon = PackedVector2Array(-5, -23, 5, -23, 5, -31, 2, -37, -1, -33, -4, -39, -5, -31)
+
+[node name="SmokeDriftA" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.22, 0.24, 0.34, 0.42)
+polygon = PackedVector2Array(-12, -16, -7, -19, -8, -28, -14, -33, -15, -24)
+
+[node name="SmokeDriftB" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.22, 0.24, 0.34, 0.38)
+polygon = PackedVector2Array(7, -14, 15, -19, 19, -25, 13, -27, 6, -21)
+
+[node name="SmokeEmbers" type="Polygon2D" parent="BodyPivot/ShadowSmokeForm"]
+color = Color(0.9, 0.3, 0.22, 0.72)
+polygon = PackedVector2Array(1, -27, 3, -27, 3, -29, 1, -29)
 
 [node name="AttackHitbox" type="Area2D" parent="BodyPivot"]
 position = Vector2(18, -14)

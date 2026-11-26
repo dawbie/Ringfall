@@ -1,0 +1,83 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/nightmare_stalker.gd" id="1_stalker"]
+[ext_resource type="Script" path="res://scripts/overhead_hp.gd" id="2_hp"]
+
+[sub_resource type="RectangleShape2D" id="Rect_StalkerFoot"]
+size = Vector2(14, 7)
+
+[sub_resource type="RectangleShape2D" id="Rect_StalkerHurtbox"]
+size = Vector2(18, 28)
+
+[sub_resource type="RectangleShape2D" id="Rect_StalkerAttack"]
+size = Vector2(26, 22)
+
+[node name="NightmareStalker" type="CharacterBody2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_stalker")
+
+[node name="Shadow" type="Polygon2D" parent="."]
+color = Color(0.02, 0.01, 0.04, 0.55)
+polygon = PackedVector2Array(-9, -2, -6, -4, 6, -4, 9, -2, 9, 2, 6, 4, -6, 4, -9, 2)
+
+[node name="BodyPivot" type="Node2D" parent="."]
+
+[node name="VisualRig" type="Node2D" parent="BodyPivot"]
+
+[node name="Wisps" type="Polygon2D" parent="BodyPivot/VisualRig"]
+color = Color(0.05, 0.04, 0.08, 0.92)
+polygon = PackedVector2Array(-8, -2, -4, 2, 0, -3, 4, 2, 8, -2, 6, -16, -6, -16)
+
+[node name="CloakBody" type="Polygon2D" parent="BodyPivot/VisualRig"]
+color = Color(0.07, 0.05, 0.11, 0.96)
+polygon = PackedVector2Array(-7, -14, 7, -14, 5, -28, 0, -33, -6, -27)
+
+[node name="Eyes" type="Polygon2D" parent="BodyPivot/VisualRig"]
+color = Color(0.95, 0.95, 1, 1)
+polygon = PackedVector2Array(-1, -24, 1, -24, 1, -25, -1, -25)
+
+[node name="EyeFront" type="Polygon2D" parent="BodyPivot/VisualRig"]
+color = Color(0.95, 0.25, 0.45, 1)
+polygon = PackedVector2Array(2, -24, 4, -24, 4, -25, 2, -25)
+
+[node name="TelegraphMarker" type="Polygon2D" parent="BodyPivot/VisualRig"]
+visible = false
+position = Vector2(0, -39)
+color = Color(0.95, 0.28, 0.55, 1)
+polygon = PackedVector2Array(-2, 0, 2, 0, 3, -7, -3, -7)
+
+[node name="ClawPivot" type="Node2D" parent="BodyPivot/VisualRig"]
+position = Vector2(5, -16)
+
+[node name="Claw" type="Polygon2D" parent="BodyPivot/VisualRig/ClawPivot"]
+color = Color(0.14, 0.1, 0.2, 1)
+polygon = PackedVector2Array(0, -2, 13, -5, 16, -1, 12, 2, 0, 1)
+
+[node name="AttackHitbox" type="Area2D" parent="BodyPivot"]
+position = Vector2(17, -14)
+collision_layer = 8
+collision_mask = 16
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BodyPivot/AttackHitbox"]
+shape = SubResource("Rect_StalkerAttack")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+position = Vector2(0, -15)
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("Rect_StalkerHurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3.5)
+shape = SubResource("Rect_StalkerFoot")
+
+[node name="OverheadHP" type="Node2D" parent="."]
+script = ExtResource("2_hp")
+fill_color = Color(0.68, 0.3, 0.85, 1)
+offset_y = -42.0
