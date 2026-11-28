@@ -44,6 +44,12 @@ var _dash_dir: Vector2 = Vector2.RIGHT
 
 var _invuln_timer: float = 0.0
 var _knockback_velocity: Vector2 = Vector2.ZERO
+<<<<<<< Updated upstream
+=======
+var _current_interactable: Interactable = null
+var root_duration_remaining: float = 0.0
+var _footstep_timer: float = 0.0
+>>>>>>> Stashed changes
 
 @onready var body_pivot: Node2D = $BodyPivot
 @onready var visual_rig: Node2D = $BodyPivot/VisualRig
@@ -60,6 +66,14 @@ func _ready() -> void:
 	slash_arc.visible = false
 	anim_player.animation_finished.connect(_on_animation_finished)
 	health_changed.emit(current_hp, max_hp)
+<<<<<<< Updated upstream
+=======
+	sanity_changed.emit(_last_emitted_sanity, max_sanity)
+	ring_state_changed.emit(false, 0.0, ring_veil_cooldown)
+	AudioManager.set_player_dead(false)
+	AudioManager.set_shadow_veil_active(false)
+	AudioManager.set_sanity_ratio(1.0)
+>>>>>>> Stashed changes
 	_update_visual_height()
 	_play_locomotion_animation()
 
@@ -75,10 +89,68 @@ func _physics_process(delta: float) -> void:
 	_update_vertical_motion(delta)
 	move_and_slide()
 	_update_visual_height()
+<<<<<<< Updated upstream
 	_update_invuln_flicker()
 	_play_locomotion_animation()
 
 
+=======
+	_update_visual_effects()
+	_update_footstep_audio(delta)
+	_play_locomotion_animation()
+
+
+func set_input_locked(locked: bool) -> void:
+	input_locked = locked
+	if locked:
+		velocity = Vector2.ZERO
+		_clear_interactable_highlight()
+
+
+func heal(amount: int) -> void:
+	if is_dead or amount <= 0:
+		return
+	current_hp = mini(max_hp, current_hp + amount)
+	health_changed.emit(current_hp, max_hp)
+	_spawn_hit_spark(global_position + Vector2(0, -16), Color(0.45, 0.95, 0.55, 1.0))
+
+
+func add_bonus_damage(amount: int) -> void:
+	bonus_damage += amount
+
+
+func restore_sanity(amount: float) -> void:
+	if is_dead or amount <= 0.0:
+		return
+	current_sanity = minf(float(max_sanity), current_sanity + amount)
+	_emit_sanity_if_changed()
+
+
+func drain_sanity(amount: float) -> void:
+	if is_dead or amount <= 0.0:
+		return
+	current_sanity = maxf(0.0, current_sanity - amount)
+	_emit_sanity_if_changed()
+
+
+func apply_root(duration: float) -> void:
+	## Unieruchamia Froda przez podany czas (pułapka cienia od łucznika).
+	## Czas nie sumuje się — bierzemy dłuższy z bieżącego i nowego.
+	root_duration_remaining = maxf(root_duration_remaining, duration)
+	AudioManager.play_sfx(&"snare_root", -1.5, 0.95, 1.05)
+	# Fioletowy błysk sygnalizujący unieruchomienie
+	_spawn_hit_spark(global_position + Vector2(0, -18), Color(0.78, 0.35, 0.95, 1.0))
+
+
+func _emit_sanity_if_changed() -> void:
+	var rounded := clampi(int(ceilf(current_sanity)), 0, max_sanity)
+	if rounded != _last_emitted_sanity:
+		_last_emitted_sanity = rounded
+		sanity_changed.emit(rounded, max_sanity)
+		AudioManager.set_sanity_ratio(current_sanity / float(maxi(1, max_sanity)))
+
+
+>>>>>>> Stashed changes
 func is_grounded() -> bool:
 	return height_z <= 0.0 and velocity_z <= 0.0
 
@@ -111,7 +183,12 @@ func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 		died.emit()
 		return
 
+<<<<<<< Updated upstream
 	play_hurt_animation()
+=======
+	AudioManager.play_sfx(&"player_hurt", 0.0, 0.94, 1.06)
+	play_action_animation(&"hurt")
+>>>>>>> Stashed changes
 
 
 func play_action_animation(anim_name: StringName) -> void:
@@ -135,6 +212,13 @@ func play_dead_animation() -> void:
 	slash_arc.visible = false
 	visual_rig.visible = true
 	velocity = Vector2.ZERO
+<<<<<<< Updated upstream
+=======
+	AudioManager.set_shadow_veil_active(false)
+	AudioManager.set_player_dead(true)
+	AudioManager.play_sfx(&"player_death", -1.0, 0.98, 1.02)
+	ring_state_changed.emit(false, _ring_cooldown_timer, ring_veil_cooldown)
+>>>>>>> Stashed changes
 	anim_player.play(&"dead")
 
 
@@ -159,6 +243,7 @@ func _update_timers(delta: float) -> void:
 func _handle_action_inputs() -> void:
 	if Input.is_action_just_pressed("jump") and is_grounded() and not _is_dashing:
 		velocity_z = jump_force
+		AudioManager.play_sfx(&"jump", -3.0, 0.95, 1.08)
 		if not _action_anim_locked:
 			anim_player.play(&"jump")
 
@@ -166,8 +251,40 @@ func _handle_action_inputs() -> void:
 		_start_dash()
 		return
 
+<<<<<<< Updated upstream
 	if Input.is_action_just_pressed("attack") and _attack_cooldown_timer <= 0.0 and not _is_attacking and not _is_dashing:
 		_start_attack()
+=======
+	if Input.is_action_just_pressed("attack"):
+		if _is_dashing:
+			_start_dash_attack()
+		elif _attack_kind != AttackKind.NONE:
+			# Buffer next combo attack if pressed near the end of current swing
+			if _attack_timer <= _attack_duration * 0.55 and is_grounded():
+				_buffered_attack = true
+		else:
+			_start_contextual_attack()
+
+
+func _enter_shadow_veil() -> void:
+	_ring_veil_timer = ring_veil_duration
+	_ring_cooldown_timer = ring_veil_cooldown
+	_zero_sanity_hp_tick = 0.0
+	drain_sanity(ring_activation_sanity_cost)
+	GameState.add_ring_corruption(1)
+	AudioManager.set_shadow_veil_active(true)
+	AudioManager.play_sfx(&"ring_enter", -1.0, 0.98, 1.02)
+	_spawn_hit_spark(global_position + Vector2(0, -14), Color(1.0, 0.82, 0.35, 1.0))
+	ring_state_changed.emit(true, _ring_veil_timer, ring_veil_duration)
+
+
+func _exit_shadow_veil() -> void:
+	_ring_veil_timer = 0.0
+	_zero_sanity_hp_tick = 0.0
+	AudioManager.set_shadow_veil_active(false)
+	AudioManager.play_sfx(&"ring_exit", -2.5, 0.96, 1.04)
+	ring_state_changed.emit(false, _ring_cooldown_timer, ring_veil_cooldown)
+>>>>>>> Stashed changes
 
 
 func _start_dash() -> void:
@@ -188,6 +305,7 @@ func _start_dash() -> void:
 	else:
 		_dash_dir = Vector2(facing, 0.0)
 
+<<<<<<< Updated upstream
 	play_action_animation(&"dash")
 
 
@@ -195,9 +313,120 @@ func _start_attack() -> void:
 	_is_attacking = true
 	_attack_timer = attack_duration
 	_attack_cooldown_timer = attack_cooldown
+=======
+	var perfect_dodged := _check_perfect_dodge()
+	if not perfect_dodged:
+		AudioManager.play_sfx(&"dash", -2.5, 0.94, 1.08)
+	_spawn_dash_afterimage(Color(0.62, 0.9, 1.0, 0.55))
+	play_action_animation(&"dash")
+
+
+func _check_perfect_dodge() -> bool:
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy == null or enemy.state == Enemy.State.DEAD:
+			continue
+		if absf(enemy.global_position.y - global_position.y) > 18.0:
+			continue
+		if absf(enemy.global_position.x - global_position.x) > 52.0:
+			continue
+
+		var threatening := (
+			enemy.state == Enemy.State.ATTACK
+			or (enemy.state == Enemy.State.WINDUP and enemy.get_windup_remaining() <= 0.24)
+		)
+		if threatening:
+			_dash_cooldown_timer = 0.0
+			_empowered_strike_bonus = maxi(_empowered_strike_bonus, perfect_dodge_bonus_damage)
+			AudioManager.play_sfx(&"perfect_dodge", 0.5, 0.98, 1.04)
+			_spawn_hit_spark(global_position + Vector2(0, -16), Color(0.65, 0.95, 1.0, 1.0))
+			var cam := get_tree().get_first_node_in_group("main_camera")
+			if cam != null and cam.has_method("trigger_hitstop"):
+				cam.trigger_hitstop(0.055)
+			return true
+	return false
+
+
+func _start_dash_attack() -> void:
+	_is_dashing = false
+	_combo_step = 0
+	_buffered_attack = false
+	_begin_attack(AttackKind.DASH_ATTACK)
+
+
+func _start_contextual_attack() -> void:
+	if not is_grounded():
+		if Input.is_action_pressed("move_down"):
+			_begin_attack(AttackKind.POGO_DOWN)
+		else:
+			_begin_attack(AttackKind.AIR_SLASH)
+		return
+
+	_combo_step = (_combo_step % 3) + 1
+	var kind: AttackKind = AttackKind.COMBO_1
+	if _combo_step == 2:
+		kind = AttackKind.COMBO_2
+	elif _combo_step == 3:
+		kind = AttackKind.COMBO_3
+	_begin_attack(kind)
+
+
+func _begin_attack(kind: AttackKind) -> void:
+	var spec: Dictionary = ATTACK_SPECS[kind]
+	_attack_kind = kind
+	_attack_duration = float(spec["duration"])
+	_attack_timer = _attack_duration
+>>>>>>> Stashed changes
 	_attack_hit_targets.clear()
 	slash_arc.visible = false
+<<<<<<< Updated upstream
 	play_action_animation(&"attack")
+=======
+
+	if kind == AttackKind.POGO_DOWN:
+		_action_anim_locked = true
+		anim_player.stop()
+		visual_rig.rotation = 0.16
+		visual_rig.scale = Vector2(0.95, 1.08)
+		AudioManager.play_sfx(&"sword_pogo", -2.0, 0.95, 1.08)
+	elif kind == AttackKind.COMBO_3 or kind == AttackKind.DASH_ATTACK:
+		AudioManager.play_sfx(&"sword_swing_heavy", -1.5, 0.94, 1.04)
+		play_action_animation(&"attack")
+	else:
+		AudioManager.play_sfx(&"sword_swing_light", -2.5, 0.93, 1.09)
+		play_action_animation(&"attack")
+
+
+func _finish_attack() -> void:
+	var finished_kind := _attack_kind
+	_cancel_attack()
+	if finished_kind in [AttackKind.COMBO_1, AttackKind.COMBO_2]:
+		_combo_window_timer = combo_reset_window
+	elif finished_kind == AttackKind.COMBO_3:
+		_combo_step = 0
+		_combo_window_timer = 0.0
+
+	if _buffered_attack and is_grounded() and not _is_dashing:
+		_buffered_attack = false
+		_start_contextual_attack()
+
+
+func _cancel_attack() -> void:
+	_attack_kind = AttackKind.NONE
+	_attack_timer = 0.0
+	_attack_lunge_velocity = Vector2.ZERO
+	attack_hitbox.monitoring = false
+	pogo_hitbox.monitoring = false
+	slash_arc.visible = false
+	sword_pivot.position = Vector2(4, -12)
+	sword_pivot.rotation = 0.0
+	if _action_anim_locked and anim_player.current_animation == &"attack":
+		_action_anim_locked = false
+	elif not anim_player.is_playing() and _action_anim_locked:
+		_action_anim_locked = false
+		visual_rig.rotation = 0.0
+		visual_rig.scale = Vector2.ONE
+>>>>>>> Stashed changes
 
 
 func _update_movement(delta: float) -> void:
@@ -245,8 +474,32 @@ func _update_attack_active_frames() -> void:
 
 		_attack_hit_targets.append(target)
 		if target.has_method("take_damage"):
+<<<<<<< Updated upstream
 			target.take_damage(attack_damage, Vector2(facing * attack_knockback, 0.0))
 			_spawn_hit_spark((global_position + target.global_position) * 0.5 + Vector2(0, -14))
+=======
+			var kb_dir := float(facing)
+			if is_pogo and absf(target.global_position.x - global_position.x) > 2.0:
+				kb_dir = signf(target.global_position.x - global_position.x)
+			var launch_z := float(spec.get("launch_z", 0.0))
+			var is_heavy_hit := (
+				_attack_kind == AttackKind.COMBO_3
+				or _attack_kind == AttackKind.DASH_ATTACK
+				or _empowered_strike_bonus > 0
+			)
+			var total_damage := int(spec["damage"]) + bonus_damage + _empowered_strike_bonus
+			_empowered_strike_bonus = 0
+			target.take_damage(total_damage, Vector2(kb_dir * float(spec["knockback"]), 0.0), launch_z)
+			AudioManager.play_sfx(&"hit_heavy" if is_heavy_hit else &"hit_flesh", -1.0, 0.92, 1.08, 0.02)
+
+			var spark_pos: Vector2 = (global_position + target.global_position) * 0.5 + Vector2(0, -14)
+			var spark_color := Color(1.0, 0.9, 0.45, 1.0) if is_pogo else Color(1.0, 0.94, 0.72, 1.0)
+			if is_pogo:
+				spark_pos = global_position + Vector2(0, -height_z + 2.0)
+				_trigger_pogo_bounce()
+
+			_spawn_hit_spark(spark_pos, spark_color)
+>>>>>>> Stashed changes
 			var cam := get_tree().get_first_node_in_group("main_camera")
 			if cam != null:
 				if cam.has_method("shake"):
@@ -255,7 +508,21 @@ func _update_attack_active_frames() -> void:
 					cam.trigger_hitstop(0.042)
 
 
+<<<<<<< Updated upstream
 func _spawn_hit_spark(world_pos: Vector2) -> void:
+=======
+func _trigger_pogo_bounce() -> void:
+	if _pogo_bounced_this_swing:
+		return
+	_pogo_bounced_this_swing = true
+	height_z = maxf(height_z, 8.0)
+	velocity_z = pogo_bounce_force
+	_dash_cooldown_timer = 0.0
+	AudioManager.play_sfx(&"pogo_bounce", -1.0, 0.96, 1.06)
+
+
+func _spawn_hit_spark(world_pos: Vector2, spark_color: Color) -> void:
+>>>>>>> Stashed changes
 	var spark := Polygon2D.new()
 	spark.polygon = PackedVector2Array([-6, 0, -2, -2, 0, -6, 2, -2, 6, 0, 2, 2, 0, 6, -2, 2])
 	spark.color = Color(1.0, 0.94, 0.72, 1.0)
@@ -272,11 +539,86 @@ func _spawn_hit_spark(world_pos: Vector2) -> void:
 
 func _update_vertical_motion(delta: float) -> void:
 	if height_z > 0.0 or velocity_z > 0.0:
+		var was_airborne := height_z > 2.0
 		velocity_z -= gravity_z * delta
 		height_z += velocity_z * delta
 		if height_z <= 0.0:
 			height_z = 0.0
 			velocity_z = 0.0
+<<<<<<< Updated upstream
+=======
+			if was_airborne and not is_dead:
+				AudioManager.play_sfx(&"land", -4.5, 0.92, 1.08)
+			if _attack_kind == AttackKind.POGO_DOWN or _attack_kind == AttackKind.AIR_SLASH:
+				_cancel_attack()
+
+
+func _update_footstep_audio(delta: float) -> void:
+	if (
+		is_dead
+		or input_locked
+		or not is_grounded()
+		or _is_dashing
+		or _attack_kind != AttackKind.NONE
+		or root_duration_remaining > 0.0
+		or velocity.length_squared() <= 400.0
+	):
+		_footstep_timer = 0.05
+		return
+
+	_footstep_timer -= delta
+	if _footstep_timer <= 0.0:
+		_footstep_timer = 0.27
+		AudioManager.play_sfx(&"footstep", -7.5, 0.88, 1.12, 0.14)
+
+
+func _update_interactable_focus() -> void:
+	var best: Interactable = null
+	var best_dist := INF
+	for area in interaction_sensor.get_overlapping_areas():
+		var candidate := area as Interactable
+		if candidate == null or not candidate.can_interact(self):
+			continue
+		var d := global_position.distance_squared_to(candidate.global_position)
+		if d < best_dist:
+			best_dist = d
+			best = candidate
+
+	if _current_interactable != best:
+		if _current_interactable != null and is_instance_valid(_current_interactable):
+			_current_interactable.set_highlighted(false)
+		_current_interactable = best
+		if _current_interactable != null:
+			_current_interactable.set_highlighted(true)
+
+
+func _clear_interactable_highlight() -> void:
+	if _current_interactable != null and is_instance_valid(_current_interactable):
+		_current_interactable.set_highlighted(false)
+	_current_interactable = null
+
+
+func _update_low_obstacle_collision() -> void:
+	if height_z >= low_obstacle_clear_height:
+		set_collision_mask_value(6, false)
+	elif not foot_clearance.has_overlapping_bodies():
+		set_collision_mask_value(6, true)
+
+
+func _update_enemy_passthrough_collision() -> void:
+	var can_phase := (
+		_is_dashing
+		or _attack_kind == AttackKind.DASH_ATTACK
+		or is_in_shadow_veil()
+		or height_z >= 18.0
+	)
+	if can_phase:
+		set_collision_mask_value(3, false)
+		set_collision_layer_value(2, false)
+	elif not enemy_clearance.has_overlapping_bodies():
+		set_collision_mask_value(3, true)
+		set_collision_layer_value(2, true)
+>>>>>>> Stashed changes
 
 
 func _update_visual_height() -> void:

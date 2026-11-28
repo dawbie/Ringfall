@@ -148,6 +148,7 @@ func _enter_windup() -> void:
 	_state_timer = windup_duration
 	velocity = Vector2.ZERO
 	telegraph_marker.visible = true
+	AudioManager.play_sfx(&"enemy_windup", -1.0 if is_elite else -3.0, 0.84 if is_elite else 0.95, 0.93 if is_elite else 1.06, 0.08)
 	var dx := _target.global_position.x - global_position.x
 	if absf(dx) > 1.0:
 		_update_facing(1 if dx > 0.0 else -1)
@@ -166,6 +167,7 @@ func _enter_attack() -> void:
 	telegraph_marker.visible = false
 	velocity = Vector2(facing * 45.0, 0.0)
 	attack_hitbox.monitoring = true
+	AudioManager.play_sfx(&"enemy_attack", -1.5, 0.84 if is_elite else 0.95, 0.93 if is_elite else 1.07, 0.06)
 
 
 func _process_attack() -> void:
@@ -216,6 +218,12 @@ func _enter_dead() -> void:
 	attack_hitbox.monitoring = false
 	hurtbox.set_deferred("monitorable", false)
 	body_collision.set_deferred("disabled", true)
+<<<<<<< Updated upstream
+=======
+	GameState.register_enemy_kill()
+	AudioManager.play_sfx(&"enemy_death", -1.0, 0.80 if is_elite else 0.92, 0.90 if is_elite else 1.06, 0.05)
+	_spawn_gold_drops()
+>>>>>>> Stashed changes
 	died.emit(self)
 
 	var tween := create_tween()
