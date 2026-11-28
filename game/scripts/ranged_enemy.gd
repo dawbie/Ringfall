@@ -8,6 +8,7 @@ signal died(enemy: RangedEnemy)
 signal health_changed(current_hp: int, max_hp: int)
 
 const PROJECTILE_SCENE: PackedScene = preload("res://scenes/projectile.tscn")
+const GOLD_COIN_SCENE: PackedScene = preload("res://scenes/gold_coin.tscn")
 
 enum State { IDLE, POSITION, CONFUSED, AIM, RECOVER, HURT, DEAD }
 
@@ -296,6 +297,8 @@ func _enter_dead() -> void:
 	telegraph_marker.visible = false
 	hurtbox.set_deferred("monitorable", false)
 	body_collision.set_deferred("disabled", true)
+	GameState.register_enemy_kill()
+	_spawn_gold_drops()
 	died.emit(self)
 
 	var tween := create_tween()
@@ -304,6 +307,21 @@ func _enter_dead() -> void:
 	tween.tween_property(visual_rig, "position", Vector2(-6, -3), 0.3)
 	tween.tween_property(visual_rig, "modulate", Color(0.5, 0.45, 0.5, 0.0), 0.75).set_delay(0.35)
 	tween.finished.connect(queue_free)
+
+
+func _spawn_gold_drops() -> void:
+	var parent_node := get_parent()
+	if parent_node == null:
+		return
+	for i in range(2):
+		var coin := GOLD_COIN_SCENE.instantiate()
+		if coin == null:
+			continue
+		coin.position = position + Vector2(randf_range(-6.0, 6.0), randf_range(-4.0, 4.0))
+		parent_node.call_deferred("add_child", coin)
+		var angle := randf_range(0.0, TAU)
+		var vel := Vector2(cos(angle), sin(angle) * 0.55) * randf_range(35.0, 75.0)
+		coin.call_deferred("setup_drop", 5, vel, randf_range(95.0, 145.0))
 
 
 func _update_facing(new_facing: int) -> void:

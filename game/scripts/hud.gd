@@ -17,6 +17,7 @@ var _low_sanity_ratio: float = 0.0
 @onready var sanity_fill: ColorRect = $TopLeftHUD/SanityFrame/SanityBg/SanityFill
 @onready var sanity_label: Label = $TopLeftHUD/SanityValue
 @onready var ring_status: Label = $TopLeftHUD/RingStatus
+@onready var gold_label: Label = $TopLeftHUD/GoldLabel
 @onready var sanity_vignette: ColorRect = $SanityVignette
 @onready var shadow_vignette: ColorRect = $ShadowVignette
 @onready var toast_label: Label = $ToastLabel
@@ -41,6 +42,8 @@ func _ready() -> void:
 	restart_button.pressed.connect(_on_restart_pressed)
 	choice_btn_0.pressed.connect(_on_choice_pressed.bind(0))
 	choice_btn_1.pressed.connect(_on_choice_pressed.bind(1))
+	GameState.gold_changed.connect(set_gold)
+	set_gold(GameState.gold)
 
 
 func _process(_delta: float) -> void:
@@ -87,6 +90,10 @@ func set_ring_state(is_active: bool, time_remaining: float, _total_time: float) 
 	else:
 		ring_status.text = "Pierscien [C]: Gotowy"
 		ring_status.add_theme_color_override("font_color", Color(0.91, 0.75, 0.32, 1.0))
+
+
+func set_gold(amount: int) -> void:
+	gold_label.text = "Zloto: %d" % amount
 
 
 func show_toast(message: String, duration: float = 2.0) -> void:

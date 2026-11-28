@@ -1,4 +1,6 @@
 extends Interactable
+
+@onready var summary_scene : PackedScene = preload("res://ui/location_summary.tscn")
 ## Exit archway at the end of the Borderland Ruins.
 ## Remains sealed until all real enemies (excluding sanity nightmares) are defeated.
 
@@ -6,6 +8,7 @@ signal gate_entered
 
 var is_unlocked: bool = false
 var _announced_unlock: bool = false
+var _completed: bool = false
 
 @onready var barrier_glow: Polygon2D = $BarrierGlow
 
@@ -52,7 +55,9 @@ func _on_interacted(_player: Player) -> void:
 			hud.show_toast("Pokonaj wszystkich orkow i Straznika Bramy!", 1.8)
 		return
 
+	if _completed:
+		return
+	_completed = true
 	gate_entered.emit()
-	var hud := get_tree().get_first_node_in_group("hud")
-	if hud != null and hud.has_method("show_toast"):
-		hud.show_toast("Lokacja ukonczona! (Ekran podsumowania w kolejnym kroku)", 2.2)
+	var summary_instance := summary_scene.instantiate()
+	get_tree().current_scene.add_child(summary_instance)

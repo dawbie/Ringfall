@@ -69,7 +69,7 @@ Gracz przemierza niebezpieczną krainę, rozwija bohatera i podejmuje decyzje wp
 - [x] Dodać uniki lub blokowanie (wybrać mechanikę pasującą do projektu) — kierunkowy unik (`X`) z powidokami i bonusem za perfekcyjny unik oraz Moc Pierścienia (`C`: Świat Cieni jak w LotR — zwykli wrogowie tracą Froda z oczu i zmieniają się w obłoki dymu, ale spada **Wola / Zdrowie psychiczne** i po cichu rośnie ukryta korupcja; przy niskiej Woli jak w *Don't Starve* pojawiają się Cienie/Zjawy widzące Froda nawet w Świecie Cieni).
 - [x] Dodać interakcje z obiektami i postaciami niezależnymi — klawisz `Shift` (oraz `E` / `RB`), bazowa klasa `Interactable`, przyjazny NPC (Sam z oknem dialogowym), ognisko leczące HP oraz pradawna kapliczka z wyborem dla gracza.
 - [x] Przygotować jedną małą, dopracowaną lokację z początkiem i końcem — *Pogranicze: Zmierzchowe Ruiny* (`borderland_ruins.tscn`, 1800 px): obóz startowy (Sam + ognisko) → zwiadowca → dziedziniec z 2 orkami → kapliczka + elitarny Strażnik Bramy → zapieczętowana brama wyjściowa otwierana po pokonaniu wrogów.
-- [ ] Dodać cel zadania i prosty ekran jego ukończenia.
+- [x] Dodać cel zadania i prosty ekran jego ukończenia — ekran podsumowania lokacji (`location_summary.tscn`) po przejściu przez odblokowaną bramę z liczbą pokonanych wrogów, zebranym złotem (monety wypadające z pokonanych przeciwników na podłogę + licznik w HUD) oraz miejscem na przyszły EXP.
 - [ ] Przygotować tymczasowe efekty dźwiękowe i muzykę.
 - [ ] Przetestować wycinek z innymi osobami i zebrać uwagi.
 
@@ -142,3 +142,4 @@ Gracz przemierza niebezpieczną krainę, rozwija bohatera i podejmuje decyzje wp
 | 2026-11-26 | M2 — Główna mechanika | Dodano perfekcyjny unik (`X`), Moc Pierścienia (`C` — filmowy Świat Cieni z ukryciem przed orkami i człekokształtnymi obłokami dymu), pasek **Woli** (zdrowie psychiczne jak w *Don't Starve* ze Zjawami przy niskiej Woli) oraz ukrytą korupcję w `GameState`. |
 | 2026-11-26 | M2 — Główna mechanika | Dodano system interakcji (`Shift` / `E`): NPC Sam z dialogami, leczące Ognisko oraz Kapliczkę z wyborem moralnym; usunięto też błędy/warningi GDScript. |
 | 2026-11-26 | M2 — Pionowy wycinek | Zbudowano lokację *Pogranicze: Zmierzchowe Ruiny* (`1800 px`) z kilkoma starciami, elitarnym Strażnikiem Bramy i zapieczętowaną bramą; dodano wrogom *poise* (brak nieskończonego stunlocka) oraz kolizje ciał przy zwykłym chodzeniu (przenikanie tylko unikiem/skokiem/Światem Cieni). |
+| 2026-11-28 | M2 — Pionowy wycinek | Dodano ekran ukończenia lokacji (`location_summary.tscn`) uruchamiany po przejściu przez odblokowaną bramę, zliczanie pokonanych wrogów w `GameState`, wypadające ze stworów złote monety (`gold_coin.tscn`) do zbierania z ziemi oraz licznik złota w HUD. |

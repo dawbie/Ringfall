@@ -17,6 +17,11 @@ func _ready() -> void:
 
 	_player = get_tree().get_first_node_in_group("player") as Player
 	_actors_parent = find_child("YSortActors", true, false) as Node2D
+	var enemy_count := 0
+	for node in get_tree().get_nodes_in_group("enemies"):
+		if not node.is_in_group("nightmares"):
+			enemy_count += 1
+	GameState.total_enemies_in_level = enemy_count
 	if _player != null:
 		hud.set_health(_player.current_hp, _player.max_hp)
 		hud.set_sanity(int(ceilf(_player.current_sanity)), _player.max_sanity)
